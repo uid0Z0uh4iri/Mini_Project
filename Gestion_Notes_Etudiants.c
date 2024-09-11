@@ -1,98 +1,94 @@
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
+#include <float.h>
 
-
-int main()
-{
-    int choix;
-    char nom[20], prenom[20];
-    float note;
-    char nom_max[20], nom_min[20];
-    float note_max = 0, note_min = 100;
-    float moyenne = 0;
-    int compteur_etudiants = 0;
+int main() {
+    int nombre_etudiants = 0;
     float somme_notes = 0;
-
-    // Tableaux pour stocker les donnÈes de tous les Ètudiants
-    char noms[20];
-    float notes[100];
+    float note_max = -20;
+    float note_min = 20;
+    char nom_max[100] = "";
+    char nom_min[100] = "";
+    int choix;
+    char prenom[50], nom[50];
+    float note;
 
     do {
         printf("\nMenu:\n");
-        printf("1. Ajouter un Ètudiant\n");
+        printf("1. Ajouter un √©tudiant\n");
         printf("2. Afficher la moyenne\n");
-        printf("3. Afficher les meilleures et moins bonnes notes avec les noms d'Ètudiants\n");
-        printf("4. Nombre d'Ètudiants au-dessus de la moyenne\n");
+        printf("3. Afficher les meilleures et moins bonnes notes\n");
+        printf("4. Nombre d'√©tudiants au-dessus de la moyenne\n");
         printf("5. Quitter\n");
         printf("Choisissez une option (1-5): ");
         scanf("%d", &choix);
 
         switch(choix) {
             case 1:
+                printf("Entrez le pr√©nom de l'√©tudiant: ");
+                scanf("%s", prenom);
+                printf("Entrez le nom de l'√©tudiant: ");
+                scanf("%s", nom);
+                printf("Entrez la note de l'√©tudiant: ");
+                scanf("%f", &note);
 
-                    printf("Donner le prÈnom d'Ètudiant: ");
-                    scanf("%s", prenom);
-                    printf("Donner le nom d'Ètudiant: ");
-                    scanf("%s", nom);
-                    printf("Donner la note: ");
-                    scanf("%f", &note);
+                nombre_etudiants++;
+                somme_notes += note;
 
-                    notes[compteur_etudiants] = note;
-                    compteur_etudiants++;
-                    somme_notes += note;
+                if (note > note_max) {
+                    note_max = note;
+                    sprintf(nom_max, "%s %s", prenom, nom);
+                }
+                if (note < note_min) {
+                    note_min = note;
+                    sprintf(nom_min, "%s %s", prenom, nom);
+                }
 
-                    if (note < note_min) {
-                        note_min = note;
-                        strcpy(nom_min, nom);
-                    }
-                    if (note > note_max) {
-                        note_max = note;
-                        strcpy(nom_max, nom);
-                    }
-
-                    moyenne = somme_notes / compteur_etudiants;
-                    printf("…tudiant ajoutÈ avec succËs!\n");
-
+                printf("√âtudiant %s %s ajout√© avec la note %.2f\n", prenom, nom, note);
                 break;
+
             case 2:
-                if (compteur_etudiants > 0) {
-                    printf("La moyenne est : %.2f\n", moyenne);
-                                             }
-                else {
-                    printf("Aucun Ètudiant n'a ÈtÈ ajoutÈ.\n");
-                     }
+                if (nombre_etudiants > 0) {
+                    printf("La moyenne des notes est: %.2f\n", somme_notes / nombre_etudiants);
+                } else {
+                    printf("Aucun √©tudiant n'a √©t√© ajout√©.\n");
+                }
                 break;
+
             case 3:
-                if (compteur_etudiants > 0) {
-                    printf("La note la plus basse est %.2f (Ètudiant: %s)\n", note_min, nom_min);
-                    printf("La meilleure note est %.2f (Ètudiant: %s)\n", note_max, nom_max);
-                                            }
-                 else {
-                    printf("Aucun Ètudiant n'a ÈtÈ ajoutÈ.\n");
-                      }
+                if (nombre_etudiants > 0) {
+                    printf("Meilleure note: %.2f par %s\n", note_max, nom_max);
+                    printf("Moins bonne note: %.2f par %s\n", note_min, nom_min);
+                } else {
+                    printf("Aucun √©tudiant n'a √©t√© ajout√©.\n");
+                }
                 break;
+
             case 4:
-                if (compteur_etudiants > 0) {
-                    int etudiants_superieur_a_moyenne = 0;
-                    for (int i = 0; i < compteur_etudiants; i++) {
-                        if (notes[i] > moyenne) {
-                            etudiants_superieur_a_moyenne++;
-                                                }
-                                                                 }
-                    printf("Le nombre d'Ètudiants qui on une note supÈrieur ‡ la moyenne est : %d\n", etudiants_superieur_a_moyenne);
-                                            }
-                else {
-                    printf("Aucun Ètudiant n'a ÈtÈ ajoutÈ.\n");
-                     }
+                if (nombre_etudiants > 0) {
+                    float moyenne = somme_notes / nombre_etudiants;
+                    int count_above_average = 0;
+                    for (int i = 0; i < nombre_etudiants; i++) {
+                        printf("Entrez √† nouveau la note de l'√©tudiant %d: ", i+1);
+                        scanf("%f", &note);
+                        if (note > moyenne) {
+                            count_above_average++;
+                        }
+                    }
+                    printf("Nombre d'√©tudiants au-dessus de la moyenne: %d\n", count_above_average);
+                } else {
+                    printf("Aucun √©tudiant n'a √©t√© ajout√©.\n");
+                }
                 break;
+
             case 5:
                 printf("Au revoir!\n");
                 break;
-            default:
-                printf("Option invalide. Veuillez choisir un nombre entre 1 et 5.\n");
-                                  }
-                       }
-         while (choix != 5);
 
-              return 0;
-     }
+            default:
+                printf("Option invalide. Veuillez choisir une option entre 1 et 5.\n");
+        }
+    } while (choix != 5);
+
+    return 0;
+}
